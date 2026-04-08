@@ -209,7 +209,7 @@ export default function App() {
 
         {/* ── NAV ── */}
         <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "1.4rem 5vw", borderBottom: "1px solid rgba(245,240,220,0.1)", position: "sticky", top: 0, background: "rgba(61,95,95,0.92)", backdropFilter: "blur(12px)", zIndex: 100 }}>
-          <span style={{ fontSize: "1rem", fontWeight: 900, letterSpacing: "0.22em", textTransform: "uppercase" }}>BWS</span>
+          <span style={{ fontSize: "1rem", fontWeight: 900, letterSpacing: "0.1em", textTransform: "uppercase" }}>Blickwinkel <span style={{ color: "#7DD4C8" }}>Schweiz</span></span>
           <div className="nav-links" style={{ display: "flex", gap: "2.5rem" }}>
             {["Podcast", "Manifesto", "Team", "Episoden"].map(l => (
               <a key={l} href={`#${l.toLowerCase()}`} className="nav-link">{l}</a>
