@@ -366,7 +366,7 @@ export default function App() {
             <div className="three-col" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem" }}>
               {team.map((m, i) => (
                 <div key={m.name} className={`team-card reveal reveal-delay-${i + 1}`}>
-                  <img src={m.img} alt={m.name} style={{ width: "90px", height: "90px", borderRadius: "50%", objectFit: "cover", objectPosition: "center top", border: "2px solid rgba(125,212,200,0.35)", margin: "0 auto 1.2rem", display: "block" }} />
+                  <img src={m.img} alt={m.name} style={{ width: "140px", height: "140px", borderRadius: "50%", objectFit: "cover", objectPosition: "center top", border: "3px solid rgba(125,212,200,0.35)", margin: "0 auto 1.2rem", display: "block" }} />
                   <div style={{ fontSize: "1.2rem", fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.05em" }}>{m.name}</div>
                   <div style={{ fontFamily: "'Lora', serif", fontSize: "0.8rem", color: "rgba(245,240,220,0.45)", margin: "0.3rem 0 1.2rem" }}>{m.role}</div>
                   <div style={{ width: "30px", height: "1.5px", background: "#7DD4C8", margin: "0 auto 1rem" }} />
