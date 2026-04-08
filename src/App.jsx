@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import imgDamian from "./assets/15.png";
+import imgRendy from "./assets/16.png";
+import imgNiwar from "./assets/17.png";
 
 // ── Typewriter Hook ──────────────────────────────────────────────
 function useTypewriter(words, speed = 80, pause = 2000) {
@@ -60,9 +63,9 @@ function Waveform() {
 
 // ── Team ─────────────────────────────────────────────────────────
 const team = [
-  { name: "Damian Kehr", role: "Redakteur & Moderator", initials: "DK", quote: "Jede Geschichte verdient es, gehört zu werden." },
-  { name: "Rendy Meyer", role: "Produktion", initials: "RM", quote: "Sound ist Emotion — wir machen beides hörbar." },
-  { name: "Niwar Barzani", role: "Marketing & Social Media", initials: "NB", quote: "Die Schweiz hat mehr zu sagen als man denkt." },
+  { name: "Damian Kehr", role: "Redakteur & Moderator", initials: "DK", img: imgDamian, quote: "Jede Geschichte verdient es, gehört zu werden." },
+  { name: "Rendy Meyer", role: "Produktion", initials: "RM", img: imgRendy, quote: "Sound ist Emotion — wir machen beides hörbar." },
+  { name: "Niwar Barzani", role: "Marketing & Social Media", initials: "NB", img: imgNiwar, quote: "Die Schweiz hat mehr zu sagen als man denkt." },
 ];
 
 // ── Main Component ────────────────────────────────────────────────
@@ -363,7 +366,7 @@ export default function App() {
             <div className="three-col" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem" }}>
               {team.map((m, i) => (
                 <div key={m.name} className={`team-card reveal reveal-delay-${i + 1}`}>
-                  <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: "rgba(125,212,200,0.15)", border: "2px solid rgba(125,212,200,0.35)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.2rem", fontSize: "1.1rem", fontWeight: 900, color: "#7DD4C8", letterSpacing: "0.04em" }}>{m.initials}</div>
+                  <img src={m.img} alt={m.name} style={{ width: "90px", height: "90px", borderRadius: "50%", objectFit: "cover", objectPosition: "center top", border: "2px solid rgba(125,212,200,0.35)", margin: "0 auto 1.2rem", display: "block" }} />
                   <div style={{ fontSize: "1.2rem", fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.05em" }}>{m.name}</div>
                   <div style={{ fontFamily: "'Lora', serif", fontSize: "0.8rem", color: "rgba(245,240,220,0.45)", margin: "0.3rem 0 1.2rem" }}>{m.role}</div>
                   <div style={{ width: "30px", height: "1.5px", background: "#7DD4C8", margin: "0 auto 1rem" }} />
