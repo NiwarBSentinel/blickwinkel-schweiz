@@ -231,8 +231,8 @@ export default function App() {
           <div style={{ position: "absolute", top: "30%", left: "50%", transform: "translate(-50%,-50%)", width: "700px", height: "500px", background: "radial-gradient(ellipse, rgba(125,212,200,0.12) 0%, transparent 70%)", pointerEvents: "none" }} />
 
           {/* floating mic decoration */}
-          <div style={{ position: "absolute", right: "8%", top: "20%", fontSize: "5rem", opacity: 0.06, animation: "slowDrift 8s ease-in-out infinite", userSelect: "none" }}>🎙</div>
-          <div style={{ position: "absolute", left: "6%", bottom: "25%", fontSize: "3.5rem", opacity: 0.05, animation: "slowDrift 11s ease-in-out infinite reverse", userSelect: "none" }}>🎧</div>
+          <div style={{ position: "absolute", right: "8%", top: "20%", fontSize: "12rem", opacity: 0.06, animation: "slowDrift 8s ease-in-out infinite", userSelect: "none" }}>🎙</div>
+          <div style={{ position: "absolute", left: "6%", bottom: "25%", fontSize: "9rem", opacity: 0.05, animation: "slowDrift 11s ease-in-out infinite reverse", userSelect: "none" }}>🎧</div>
 
           <p style={{ fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.38em", textTransform: "uppercase", color: "#7DD4C8", marginBottom: "2rem", animation: "fadeUp 0.8s ease both" }}>
             🇨🇭 &nbsp; Schweizer Mundart Podcast · 2026
