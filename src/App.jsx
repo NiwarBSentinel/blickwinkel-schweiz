@@ -271,11 +271,6 @@ export default function App() {
               ▶ &nbsp;Auf YouTube schauen
             </a>
           </div>
-
-          <div style={{ position: "absolute", bottom: "2rem", left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.4rem", animation: "pulse 2.5s ease-in-out infinite" }}>
-            <span style={{ fontSize: "0.65rem", letterSpacing: "0.25em", textTransform: "uppercase", color: "rgba(245,240,220,0.3)" }}>Scroll</span>
-            <div style={{ width: "1px", height: "40px", background: "linear-gradient(to bottom, rgba(245,240,220,0.4), transparent)" }} />
-          </div>
         </section>
 
         {/* ── MANIFESTO ── */}
