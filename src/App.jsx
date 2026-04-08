@@ -68,6 +68,22 @@ const team = [
 // ── Main Component ────────────────────────────────────────────────
 export default function App() {
   useScrollReveal();
+  const heroRef = useRef(null);
+
+  useEffect(() => {
+    const el = heroRef.current;
+    if (!el) return;
+    const onMove = (e) => {
+      const { left, top, width, height } = el.getBoundingClientRect();
+      const x = ((e.clientX - left) / width - 0.5) * 12;
+      const y = ((e.clientY - top) / height - 0.5) * 8;
+      el.style.transform = `perspective(900px) rotateX(${-y}deg) rotateY(${x}deg)`;
+    };
+    const onLeave = () => { el.style.transform = "perspective(900px) rotateX(0deg) rotateY(0deg)"; };
+    el.addEventListener("mousemove", onMove);
+    el.addEventListener("mouseleave", onLeave);
+    return () => { el.removeEventListener("mousemove", onMove); el.removeEventListener("mouseleave", onLeave); };
+  }, []);
 
   const typeWords = [
     "über Scheitern.",
@@ -219,7 +235,7 @@ export default function App() {
             🇨🇭 &nbsp; Schweizer Mundart Podcast · 2026
           </p>
 
-          <div style={{ animation: "fadeUp 0.9s ease 0.15s both" }}>
+          <div ref={heroRef} style={{ animation: "fadeUp 0.9s ease 0.15s both", transition: "transform 0.15s ease-out" }}>
             <h1 className="hero-title" style={{ fontSize: "clamp(4rem, 10vw, 9rem)", fontWeight: 900, lineHeight: 0.88, textTransform: "uppercase", letterSpacing: "0.03em" }}>
               <span style={{ display: "block", color: "transparent", WebkitTextStroke: "2px #F5F0DC", textShadow: "0 0 60px rgba(245,240,220,0.15)" }}>Blickwinkel</span>
               <span style={{ display: "block", color: "transparent", WebkitTextStroke: "2px #7DD4C8", textShadow: "0 0 60px rgba(125,212,200,0.35), 0 0 120px rgba(125,212,200,0.15)" }}>Schweiz</span>
