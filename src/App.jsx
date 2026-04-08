@@ -238,8 +238,8 @@ export default function App() {
           <div style={{ animation: "fadeUp 0.9s ease 0.15s both" }}>
             <div ref={heroRef} style={{ transition: "transform 0.15s ease-out" }}>
               <h1 className="hero-title" style={{ fontSize: "clamp(4rem, 10vw, 9rem)", fontWeight: 900, lineHeight: 0.88, textTransform: "uppercase", letterSpacing: "0.03em" }}>
-                <span style={{ display: "block", color: "transparent", WebkitTextStroke: "2px #F5F0DC", textShadow: "0 0 60px rgba(245,240,220,0.15)" }}>Blickwinkel</span>
-                <span style={{ display: "block", color: "transparent", WebkitTextStroke: "2px #7DD4C8", textShadow: "0 0 60px rgba(125,212,200,0.35), 0 0 120px rgba(125,212,200,0.15)" }}>Schweiz</span>
+                <span style={{ display: "block", color: "transparent", WebkitTextStroke: "2px #F5F0DC", textShadow: "0 0 40px rgba(245,240,220,0.4), 0 0 80px rgba(245,240,220,0.25), 0 0 140px rgba(245,240,220,0.1)" }}>Blickwinkel</span>
+                <span style={{ display: "block", color: "transparent", WebkitTextStroke: "2px #7DD4C8", textShadow: "0 0 40px rgba(125,212,200,0.6), 0 0 80px rgba(125,212,200,0.4), 0 0 140px rgba(125,212,200,0.2)" }}>Schweiz</span>
               </h1>
             </div>
           </div>
