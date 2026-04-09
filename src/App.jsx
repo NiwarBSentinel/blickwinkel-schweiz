@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import imgDamian from "./assets/15.png";
 import imgRendy from "./assets/16.png";
 import imgNiwar from "./assets/17.png";
+import { supabase } from "./lib/supabase";
 
 // ── Typewriter Hook ──────────────────────────────────────────────
 function useTypewriter(words, speed = 80, pause = 2000) {
@@ -67,6 +68,109 @@ const team = [
   { name: "Rendy Meyer", role: "Produktion", initials: "RM", img: imgRendy, quote: "Sound ist Emotion — wir machen beides hörbar." },
   { name: "Niwar Barzani", role: "Marketing & Social Media", initials: "NB", img: imgNiwar, quote: "Die Schweiz hat mehr zu sagen als man denkt." },
 ];
+
+// ── Newsletter Component ──────────────────────────────────────────
+function Newsletter() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState("idle"); // idle | loading | success | error
+  const [msg, setMsg] = useState("");
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!email.trim()) return;
+    setStatus("loading");
+    const { error } = await supabase.from("newsletter").insert({ email: email.trim().toLowerCase() });
+    if (error) {
+      if (error.code === "23505") {
+        setStatus("success");
+        setMsg("Du bist bereits angemeldet! 🎉");
+      } else {
+        setStatus("error");
+        setMsg("Etwas ist schiefgelaufen. Versuche es später.");
+      }
+    } else {
+      setStatus("success");
+      setMsg("Willkommen an Bord! 🎉");
+    }
+    setEmail("");
+  }
+
+  return (
+    <section style={{ padding: "6rem 5vw", textAlign: "center", position: "relative", overflow: "hidden" }}>
+      <div style={{ position: "absolute", inset: 0, backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(245,240,220,0.015) 60px, rgba(245,240,220,0.015) 61px)", pointerEvents: "none" }} />
+      <div className="reveal" style={{ maxWidth: "550px", margin: "0 auto", position: "relative" }}>
+        <span style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.38em", textTransform: "uppercase", color: "#7DD4C8" }}>Newsletter</span>
+        <h2 style={{ fontSize: "clamp(1.8rem, 4vw, 3rem)", fontWeight: 900, textTransform: "uppercase", lineHeight: 1, margin: "1rem 0 1rem" }}>
+          Nichts<br /><span style={{ color: "#7DD4C8" }}>verpassen.</span>
+        </h2>
+        <p style={{ fontFamily: "'Lora', serif", fontSize: "0.95rem", color: "rgba(245,240,220,0.6)", lineHeight: 1.8, marginBottom: "2rem" }}>
+          Neue Episoden, Behind-the-Scenes und exklusive Inhalte — direkt in dein Postfach.
+        </p>
+
+        {status === "success" ? (
+          <div style={{ padding: "1.2rem 2rem", borderRadius: "12px", background: "rgba(125,212,200,0.12)", border: "1px solid rgba(125,212,200,0.3)", color: "#7DD4C8", fontWeight: 700, fontSize: "0.95rem" }}>
+            {msg}
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} style={{ display: "flex", gap: "0.75rem", maxWidth: "480px", margin: "0 auto" }}>
+            <input
+              type="email"
+              required
+              placeholder="deine@email.ch"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={{
+                flex: 1,
+                padding: "0.85rem 1.2rem",
+                borderRadius: "100px",
+                border: "1.5px solid rgba(245,240,220,0.15)",
+                background: "rgba(245,240,220,0.05)",
+                color: "#F5F0DC",
+                fontFamily: "'Lora', serif",
+                fontSize: "0.9rem",
+                outline: "none",
+                transition: "border-color 0.2s",
+              }}
+              onFocus={(e) => { e.target.style.borderColor = "rgba(125,212,200,0.5)"; }}
+              onBlur={(e) => { e.target.style.borderColor = "rgba(245,240,220,0.15)"; }}
+            />
+            <button
+              type="submit"
+              disabled={status === "loading"}
+              style={{
+                padding: "0.85rem 1.8rem",
+                borderRadius: "100px",
+                border: "none",
+                background: "#7DD4C8",
+                color: "#1a1a2e",
+                fontFamily: "'Barlow Condensed', sans-serif",
+                fontSize: "0.85rem",
+                fontWeight: 800,
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                cursor: status === "loading" ? "wait" : "pointer",
+                opacity: status === "loading" ? 0.6 : 1,
+                transition: "opacity 0.2s, transform 0.2s",
+              }}
+              onMouseEnter={(e) => { if (status !== "loading") e.currentTarget.style.transform = "translateY(-2px)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}
+            >
+              {status === "loading" ? "..." : "Anmelden"}
+            </button>
+          </form>
+        )}
+
+        {status === "error" && (
+          <p style={{ fontFamily: "'Lora', serif", fontSize: "0.8rem", color: "rgba(255,100,100,0.8)", marginTop: "1rem" }}>{msg}</p>
+        )}
+
+        <p style={{ fontFamily: "'Lora', serif", fontSize: "0.7rem", color: "rgba(245,240,220,0.25)", marginTop: "1.2rem" }}>
+          Kein Spam. Jederzeit abmeldbar.
+        </p>
+      </div>
+    </section>
+  );
+}
 
 // ── Main Component ────────────────────────────────────────────────
 export default function App() {
@@ -398,6 +502,9 @@ export default function App() {
             </div>
           </div>
         </section>
+
+        {/* ── NEWSLETTER ── */}
+        <Newsletter />
 
         {/* ── FOOTER ── */}
         <footer style={{ background: "rgba(0,0,0,0.4)", padding: "2.5rem 5vw", borderTop: "1px solid rgba(245,240,220,0.08)" }}>
