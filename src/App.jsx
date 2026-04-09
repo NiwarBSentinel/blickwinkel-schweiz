@@ -329,8 +329,8 @@ export default function App() {
             ))}
           </div>
           <div style={{ display: "flex", gap: "0.75rem" }}>
-            <a href="https://spotify.com" style={{ background: "#1DB954", color: "#fff", padding: "0.35rem 1rem", borderRadius: "100px", fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase" }}>Spotify</a>
-            <a href="https://youtube.com" style={{ background: "#FF0000", color: "#fff", padding: "0.35rem 1rem", borderRadius: "100px", fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase" }}>YouTube</a>
+            <a href="https://spotify.com" target="_blank" rel="noopener noreferrer" style={{ background: "#1DB954", color: "#fff", padding: "0.35rem 1rem", borderRadius: "100px", fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase" }}>Spotify</a>
+            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" style={{ background: "#FF0000", color: "#fff", padding: "0.35rem 1rem", borderRadius: "100px", fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase" }}>YouTube</a>
           </div>
         </nav>
 
@@ -373,12 +373,12 @@ export default function App() {
           </p>
 
           <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", justifyContent: "center", animation: "fadeUp 1s ease 0.6s both" }}>
-            <a href="https://spotify.com" style={{ background: "#1DB954", color: "#fff", padding: "0.85rem 2.2rem", borderRadius: "100px", fontSize: "0.9rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", transition: "transform 0.2s, opacity 0.2s" }}
+            <a href="https://spotify.com" target="_blank" rel="noopener noreferrer" style={{ background: "#1DB954", color: "#fff", padding: "0.85rem 2.2rem", borderRadius: "100px", fontSize: "0.9rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", transition: "transform 0.2s, opacity 0.2s" }}
               onMouseEnter={e => e.currentTarget.style.transform = "translateY(-2px)"}
               onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}>
               ▶ &nbsp;Auf Spotify hören
             </a>
-            <a href="https://youtube.com" style={{ border: "2px solid rgba(245,240,220,0.3)", color: "#F5F0DC", padding: "0.85rem 2.2rem", borderRadius: "100px", fontSize: "0.9rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", transition: "border-color 0.2s, transform 0.2s" }}
+            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" style={{ border: "2px solid rgba(245,240,220,0.3)", color: "#F5F0DC", padding: "0.85rem 2.2rem", borderRadius: "100px", fontSize: "0.9rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", transition: "border-color 0.2s, transform 0.2s" }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(245,240,220,0.7)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(245,240,220,0.3)"; e.currentTarget.style.transform = "translateY(0)"; }}>
               ▶ &nbsp;Auf YouTube schauen
@@ -497,11 +497,11 @@ export default function App() {
               Folge uns jetzt und verpasse keine Episode. Die ersten Gespräche kommen bald — und sie werden dich nicht kalt lassen.
             </p>
             <div style={{ display: "flex", gap: "1.5rem", justifyContent: "center", flexWrap: "wrap" }}>
-              <a href="https://spotify.com" className="platform-btn" style={{ borderColor: "#1DB954" }}>
+              <a href="https://spotify.com" target="_blank" rel="noopener noreferrer" className="platform-btn" style={{ borderColor: "#1DB954" }}>
                 <span style={{ fontSize: "1.8rem" }}>🎵</span>
                 Spotify
               </a>
-              <a href="https://youtube.com" className="platform-btn" style={{ borderColor: "#FF0000" }}>
+              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="platform-btn" style={{ borderColor: "#FF0000" }}>
                 <span style={{ fontSize: "1.8rem" }}>▶</span>
                 YouTube
               </a>
@@ -527,11 +527,15 @@ export default function App() {
               © 2026 Blickwinkel Schweiz · Alle Rechte vorbehalten
             </div>
             <div style={{ display: "flex", gap: "1.5rem" }}>
-              {["Instagram", "Spotify", "YouTube"].map(p => (
-                <a key={p} href="#" style={{ fontFamily: "'Lora', serif", fontSize: "0.8rem", color: "rgba(245,240,220,0.4)", letterSpacing: "0.04em", transition: "color 0.2s" }}
+              {[
+                { name: "Instagram", url: "https://instagram.com" },
+                { name: "Spotify", url: "https://spotify.com" },
+                { name: "YouTube", url: "https://youtube.com" },
+              ].map(p => (
+                <a key={p.name} href={p.url} target="_blank" rel="noopener noreferrer" style={{ fontFamily: "'Lora', serif", fontSize: "0.8rem", color: "rgba(245,240,220,0.4)", letterSpacing: "0.04em", transition: "color 0.2s" }}
                   onMouseEnter={e => e.target.style.color = "#F5F0DC"}
                   onMouseLeave={e => e.target.style.color = "rgba(245,240,220,0.4)"}>
-                  {p}
+                  {p.name}
                 </a>
               ))}
             </div>
