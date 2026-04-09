@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import imgDamian from "./assets/15.png";
 import imgRendy from "./assets/16.png";
 import imgNiwar from "./assets/17.png";
-import { supabase } from "./lib/supabase";
 
 // ── Typewriter Hook ──────────────────────────────────────────────
 function useTypewriter(words, speed = 80, pause = 2000) {
@@ -79,7 +78,14 @@ function Newsletter() {
     e.preventDefault();
     if (!email.trim()) return;
     setStatus("loading");
-    const { error } = await supabase.from("newsletter").insert({ email: email.trim().toLowerCase() });
+    let error = null;
+    try {
+      const { supabase } = await import("./lib/supabase");
+      const res = await supabase.from("newsletter").insert({ email: email.trim().toLowerCase() });
+      error = res.error;
+    } catch (e) {
+      error = e;
+    }
     if (error) {
       if (error.code === "23505") {
         setStatus("success");
