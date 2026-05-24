@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import imgDamian from "./assets/15.png";
 import imgRendy from "./assets/16.png";
 import imgNiwar from "./assets/17.png";
+import WerbepartnerSection from "./sections/WerbepartnerSection";
 
 // ── Typewriter Hook ──────────────────────────────────────────────
 function useTypewriter(words, speed = 80, pause = 2000) {
@@ -385,6 +386,9 @@ export default function App() {
             </a>
           </div>
         </section>
+
+        {/* ── WERBEPARTNER ── */}
+        <WerbepartnerSection />
 
         {/* ── MANIFESTO ── */}
         <section id="manifesto" style={{ background: "rgba(0,0,0,0.25)", padding: "8rem 5vw", textAlign: "center", position: "relative", overflow: "hidden" }}>
