@@ -46,32 +46,6 @@ function useScrollReveal() {
   }, []);
 }
 
-// ── Hero Strip Parallax Hook ─────────────────────────────────────
-function useHeroStripParallax() {
-  useEffect(() => {
-    const strip = document.querySelector("[data-hero-strip]");
-    if (!strip) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    let raf = null;
-    const update = () => {
-      raf = null;
-      const y = window.scrollY;
-      if (y > window.innerHeight * 1.4) return;
-      strip.style.transform = `translateY(${y * 0.15}px)`;
-    };
-    const onScroll = () => {
-      if (raf === null) raf = requestAnimationFrame(update);
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, []);
-}
-
 // ── Waveform Component ───────────────────────────────────────────
 function Waveform() {
   const bars = Array.from({ length: 40 }, (_, i) => i);
@@ -210,7 +184,6 @@ function Newsletter() {
 // ── Main Component ────────────────────────────────────────────────
 export default function App() {
   useScrollReveal();
-  useHeroStripParallax();
   const heroRef = useRef(null);
 
   useEffect(() => {
@@ -428,7 +401,6 @@ export default function App() {
 
           {/* Schweiz silhouette strip — bottom of hero */}
           <img
-            data-hero-strip
             src={heroStrip}
             alt=""
             style={{
@@ -442,7 +414,6 @@ export default function App() {
               pointerEvents: "none",
               userSelect: "none",
               zIndex: 0,
-              willChange: "transform",
             }}
           />
         </section>
