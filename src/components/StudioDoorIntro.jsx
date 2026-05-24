@@ -24,11 +24,11 @@ export default function StudioDoorIntro() {
     if (phase !== "idle") return;
     setPhase("entering");
     sessionStorage.setItem("bw-intro-played", "1");
-    setTimeout(() => setPhase("done"), 1700);
+    setTimeout(() => setPhase("done"), 2050);
     setTimeout(() => {
       document.body.style.overflow = "";
       setMounted(false);
-    }, 2350);
+    }, 3050);
   }
 
   function skip(e) {
@@ -55,7 +55,7 @@ export default function StudioDoorIntro() {
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          transition: opacity 0.6s ease;
+          transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
           overflow: hidden;
           user-select: none;
         }
@@ -65,7 +65,7 @@ export default function StudioDoorIntro() {
         }
         .bw-intro-onair {
           position: absolute;
-          top: 7%;
+          top: 6%;
           display: flex;
           align-items: center;
           gap: 0.7rem;
@@ -75,6 +75,22 @@ export default function StudioDoorIntro() {
           letter-spacing: 0.42em;
           color: #e85a5a;
           text-shadow: 0 0 14px rgba(232,90,90,0.55);
+        }
+        .bw-intro-name {
+          position: absolute;
+          top: 12%;
+          font-family: 'Barlow Condensed', sans-serif;
+          font-size: clamp(1.2rem, 2.2vw, 1.55rem);
+          font-weight: 900;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: #F5F0DC;
+          text-shadow: 0 0 32px rgba(245,240,220,0.25);
+          white-space: nowrap;
+        }
+        .bw-intro-name-accent {
+          color: #7DD4C8;
+          text-shadow: 0 0 28px rgba(125,212,200,0.45);
         }
         .bw-intro-onair-dot {
           width: 8px;
@@ -103,7 +119,7 @@ export default function StudioDoorIntro() {
           height: min(640px, 78vh);
           position: relative;
           transform-style: preserve-3d;
-          transition: transform 1.6s cubic-bezier(0.42, 0.0, 0.3, 1);
+          transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1) 0.15s;
         }
         .bw-intro.entering .bw-intro-doorframe {
           transform: translateZ(950px);
@@ -119,7 +135,7 @@ export default function StudioDoorIntro() {
           box-shadow:
             inset 0 0 90px rgba(0,0,0,0.55),
             0 20px 60px rgba(0,0,0,0.45);
-          transition: transform 1.4s cubic-bezier(0.6, 0.04, 0.4, 1) 0.05s;
+          transition: transform 1.8s cubic-bezier(0.5, 0, 0.2, 1) 0.05s;
           backface-visibility: hidden;
           display: flex;
           align-items: center;
@@ -151,22 +167,6 @@ export default function StudioDoorIntro() {
         .bw-intro.entering .bw-intro-door-left  { transform: rotateY(-115deg); }
         .bw-intro.entering .bw-intro-door-right { transform: rotateY( 115deg); }
 
-        .bw-intro-logo-half {
-          font-family: 'Barlow Condensed', sans-serif;
-          font-size: clamp(1.3rem, 3.4vw, 2rem);
-          font-weight: 900;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-        }
-        .bw-intro-door-left  .bw-intro-logo-half {
-          color: #F5F0DC;
-          text-shadow: 0 0 28px rgba(245,240,220,0.3);
-        }
-        .bw-intro-door-right .bw-intro-logo-half {
-          color: #7DD4C8;
-          text-shadow: 0 0 28px rgba(125,212,200,0.45);
-        }
-
         .bw-intro-handle {
           position: absolute;
           top: 50%;
@@ -188,7 +188,7 @@ export default function StudioDoorIntro() {
           background: linear-gradient(180deg, transparent 0%, #FAF5CD 50%, transparent 100%);
           box-shadow: 0 0 50px rgba(250,245,205,0.7);
           transform: translateX(-50%);
-          transition: opacity 0.5s ease;
+          transition: opacity 0.8s ease-out;
           pointer-events: none;
         }
         .bw-intro.entering .bw-intro-lightgap { opacity: 0; }
@@ -246,14 +246,16 @@ export default function StudioDoorIntro() {
           On Air
         </div>
 
+        <div className="bw-intro-name">
+          Blickwinkel <span className="bw-intro-name-accent">Schweiz</span>
+        </div>
+
         <div className="bw-intro-scene">
           <div className="bw-intro-doorframe">
             <div className="bw-intro-door bw-intro-door-left">
-              <span className="bw-intro-logo-half">Blickwinkel</span>
               <span className="bw-intro-handle bw-intro-handle-left" />
             </div>
             <div className="bw-intro-door bw-intro-door-right">
-              <span className="bw-intro-logo-half">Schweiz</span>
               <span className="bw-intro-handle bw-intro-handle-right" />
             </div>
             <div className="bw-intro-lightgap" />
