@@ -387,9 +387,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* ── WERBEPARTNER ── */}
-        <WerbepartnerSection />
-
         {/* ── MANIFESTO ── */}
         <section id="manifesto" style={{ background: "rgba(0,0,0,0.25)", padding: "8rem 5vw", textAlign: "center", position: "relative", overflow: "hidden" }}>
           <div style={{ position: "absolute", inset: 0, backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(245,240,220,0.02) 60px, rgba(245,240,220,0.02) 61px)", pointerEvents: "none" }} />
@@ -490,6 +487,9 @@ export default function App() {
             </div>
           </div>
         </section>
+
+        {/* ── WERBEPARTNER ── */}
+        <WerbepartnerSection />
 
         {/* ── CTA ── */}
         <section style={{ background: "rgba(0,0,0,0.3)", padding: "7rem 5vw", textAlign: "center" }}>
