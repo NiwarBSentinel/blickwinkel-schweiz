@@ -318,11 +318,20 @@ export default function App() {
           .nav-links { display: none; }
           .section-pad { padding: 4rem 1.5rem !important; }
         }
+
+        @keyframes bw-hero-zoom-in {
+          from { transform: scale(1.08); opacity: 0; }
+          to   { transform: scale(1); opacity: 1; }
+        }
+        [data-hero-root].bw-hero-reveal {
+          animation: bw-hero-zoom-in 320ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+          transform-origin: center top;
+        }
       `}</style>
 
       <StudioDoorIntro />
 
-      <div style={{ background: "#3D5F5F", color: "#F5F0DC", fontFamily: "'Barlow Condensed', sans-serif", minHeight: "100vh", width: "100%" }}>
+      <div data-hero-root style={{ background: "#3D5F5F", color: "#F5F0DC", fontFamily: "'Barlow Condensed', sans-serif", minHeight: "100vh", width: "100%" }}>
 
         {/* ── NAV ── */}
         <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "1.4rem 5vw", borderBottom: "1px solid rgba(245,240,220,0.1)", position: "sticky", top: 0, background: "rgba(61,95,95,0.92)", backdropFilter: "blur(12px)", zIndex: 100 }}>

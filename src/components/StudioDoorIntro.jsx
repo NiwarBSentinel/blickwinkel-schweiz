@@ -6,9 +6,58 @@ const NOISE_SVG =
     "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(#n)' opacity='0.55'/></svg>",
   );
 
+function playEntrySounds() {
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    const ctx = new AC();
+    const now = ctx.currentTime;
+
+    const click = ctx.createOscillator();
+    const clickGain = ctx.createGain();
+    click.type = "triangle";
+    click.frequency.setValueAtTime(820, now);
+    click.frequency.exponentialRampToValueAtTime(90, now + 0.04);
+    clickGain.gain.setValueAtTime(0.0001, now);
+    clickGain.gain.exponentialRampToValueAtTime(0.22, now + 0.006);
+    clickGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.09);
+    click.connect(clickGain).connect(ctx.destination);
+    click.start(now);
+    click.stop(now + 0.12);
+
+    const creakStart = now + 0.1;
+    const bufLen = Math.floor(ctx.sampleRate * 0.55);
+    const buf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < bufLen; i++) {
+      const t = i / bufLen;
+      const env = Math.sin(Math.PI * t) * Math.pow(1 - t, 0.4);
+      data[i] = (Math.random() * 2 - 1) * env;
+    }
+    const noise = ctx.createBufferSource();
+    noise.buffer = buf;
+    const filter = ctx.createBiquadFilter();
+    filter.type = "lowpass";
+    filter.frequency.value = 220;
+    filter.Q.value = 5;
+    const noiseGain = ctx.createGain();
+    noiseGain.gain.setValueAtTime(0.14, creakStart);
+    noiseGain.gain.exponentialRampToValueAtTime(0.001, creakStart + 0.55);
+    noise.connect(filter).connect(noiseGain).connect(ctx.destination);
+    noise.start(creakStart);
+    noise.stop(creakStart + 0.6);
+
+    setTimeout(() => { try { ctx.close(); } catch { /* ignore */ } }, 1500);
+  } catch {
+    /* silent */
+  }
+}
+
 export default function StudioDoorIntro() {
-  const [phase, setPhase] = useState("idle");
+  const [entering, setEntering] = useState(false);
+  const [phase2, setPhase2] = useState(false);
   const [mounted, setMounted] = useState(true);
+  const [reduced, setReduced] = useState(false);
   const stageRef = useRef(null);
 
   useEffect(() => {
@@ -16,19 +65,21 @@ export default function StudioDoorIntro() {
     const hasHash = window.location.hash && window.location.hash !== "#";
     const played = sessionStorage.getItem("bw-intro-played");
 
-    if (reducedMotion || hasHash || played) {
+    if (hasHash || played) {
       setMounted(false);
       return;
     }
+    if (reducedMotion) setReduced(true);
 
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "";
+      document.body.style.pointerEvents = "";
     };
   }, []);
 
   useEffect(() => {
-    if (!mounted || phase !== "idle") return;
+    if (!mounted || entering) return;
     const onMove = (e) => {
       const x = (e.clientX / window.innerWidth - 0.5) * 16;
       const y = (e.clientY / window.innerHeight - 0.5) * 12;
@@ -39,30 +90,53 @@ export default function StudioDoorIntro() {
     };
     document.addEventListener("mousemove", onMove);
     return () => document.removeEventListener("mousemove", onMove);
-  }, [mounted, phase]);
+  }, [mounted, entering]);
 
   function enter() {
-    if (phase !== "idle") return;
-    setPhase("entering");
+    if (entering) return;
     sessionStorage.setItem("bw-intro-played", "1");
-    setTimeout(() => setPhase("done"), 1300);
+    setEntering(true);
+
+    if (reduced) {
+      setTimeout(() => {
+        document.body.style.overflow = "";
+        setMounted(false);
+      }, 320);
+      return;
+    }
+
+    playEntrySounds();
+    document.body.style.pointerEvents = "none";
+
+    setTimeout(() => setPhase2(true), 400);
+
+    setTimeout(() => {
+      const heroRoot = document.querySelector("[data-hero-root]");
+      if (heroRoot) heroRoot.classList.add("bw-hero-reveal");
+    }, 1000);
+
     setTimeout(() => {
       document.body.style.overflow = "";
+      document.body.style.pointerEvents = "";
       setMounted(false);
-    }, 2350);
+    }, 1400);
   }
 
   function skip(e) {
     e.stopPropagation();
     sessionStorage.setItem("bw-intro-played", "1");
-    setPhase("done");
-    setTimeout(() => {
-      document.body.style.overflow = "";
-      setMounted(false);
-    }, 650);
+    document.body.style.overflow = "";
+    setMounted(false);
   }
 
   if (!mounted) return null;
+
+  const className = [
+    "bw-intro",
+    entering && "entering",
+    phase2 && "phase2",
+    reduced && "reduced",
+  ].filter(Boolean).join(" ");
 
   return (
     <>
@@ -76,7 +150,6 @@ export default function StudioDoorIntro() {
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
           overflow: hidden;
           user-select: none;
           font-family: 'Barlow Condensed', sans-serif;
@@ -97,7 +170,12 @@ export default function StudioDoorIntro() {
           background: radial-gradient(ellipse at 50% 50%, transparent 28%, rgba(0,0,0,0.78) 100%);
           pointer-events: none;
         }
-        .bw-intro.done { opacity: 0; pointer-events: none; }
+
+        .bw-intro.reduced.entering {
+          opacity: 0;
+          transition: opacity 300ms ease;
+          pointer-events: none;
+        }
 
         .bw-intro-skip {
           position: absolute;
@@ -112,10 +190,49 @@ export default function StudioDoorIntro() {
           text-transform: uppercase;
           cursor: pointer;
           padding: 0.5rem 0.8rem;
-          z-index: 10;
+          z-index: 12;
           transition: color 0.25s ease;
         }
         .bw-intro-skip:hover { color: #F5F0DC; }
+
+        .bw-intro-bloom {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          background: radial-gradient(circle, #ffe1bf 0%, #ffa85c 22%, rgba(255,168,92,0.4) 50%, transparent 75%);
+          transform: translate(-50%, -50%) scale(0.5);
+          opacity: 0;
+          pointer-events: none;
+          z-index: 6;
+          mix-blend-mode: screen;
+        }
+        .bw-intro.entering:not(.reduced) .bw-intro-bloom {
+          animation: bw-bloom-burst 800ms cubic-bezier(0.2, 0.7, 0.4, 1) 80ms forwards;
+        }
+        @keyframes bw-bloom-burst {
+          0%   { transform: translate(-50%, -50%) scale(0.4); opacity: 0; }
+          35%  { transform: translate(-50%, -50%) scale(4); opacity: 0.85; }
+          100% { transform: translate(-50%, -50%) scale(14); opacity: 0; }
+        }
+
+        .bw-intro-whiteflash {
+          position: absolute;
+          inset: 0;
+          background: #ffffff;
+          opacity: 0;
+          pointer-events: none;
+          z-index: 8;
+        }
+        .bw-intro.entering:not(.reduced) .bw-intro-whiteflash {
+          animation:
+            bw-whiteflash-in 220ms ease-in 800ms forwards,
+            bw-whiteflash-out 160ms ease-out 1020ms forwards;
+        }
+        @keyframes bw-whiteflash-in  { to { opacity: 1; } }
+        @keyframes bw-whiteflash-out { to { opacity: 0; } }
 
         .bw-intro-scene {
           perspective: 1600px;
@@ -129,7 +246,6 @@ export default function StudioDoorIntro() {
           position: relative;
           z-index: 2;
         }
-
         .bw-intro-stage {
           display: flex;
           flex-direction: column;
@@ -178,6 +294,12 @@ export default function StudioDoorIntro() {
           text-shadow: 0 0 28px rgba(125,212,200,0.5);
         }
 
+        .bw-intro.phase2 .bw-intro-onair,
+        .bw-intro.phase2 .bw-intro-name,
+        .bw-intro.phase2 .bw-intro-cta {
+          display: none;
+        }
+
         .bw-intro-frame {
           position: relative;
           padding: 16px 16px 18px;
@@ -188,11 +310,17 @@ export default function StudioDoorIntro() {
             0 28px 70px rgba(0,0,0,0.65),
             0 0 0 1px rgba(245,240,220,0.04);
           animation: bw-intro-breath 5s ease-in-out infinite alternate;
+          transform-origin: center center;
         }
-        .bw-intro.entering .bw-intro-frame { animation: none; }
         @keyframes bw-intro-breath {
           from { transform: scale(1); }
           to   { transform: scale(1.006); }
+        }
+        .bw-intro.entering:not(.reduced) .bw-intro-frame {
+          animation: bw-camera-push 600ms cubic-bezier(0.4, 0, 0.2, 1) 400ms forwards;
+        }
+        @keyframes bw-camera-push {
+          to { transform: scale(3.5); }
         }
 
         .bw-intro-doorframe {
@@ -200,12 +328,6 @@ export default function StudioDoorIntro() {
           height: min(560px, 64vh);
           position: relative;
           transform-style: preserve-3d;
-          transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
-                      opacity 0.9s ease-in 0.3s;
-        }
-        .bw-intro.entering .bw-intro-doorframe {
-          transform: scale(3.4);
-          opacity: 0;
         }
 
         .bw-intro-door {
@@ -225,7 +347,7 @@ export default function StudioDoorIntro() {
           box-shadow:
             inset 0 0 110px rgba(0,0,0,0.55),
             inset 0 1px 0 rgba(245,240,220,0.05);
-          transition: transform 1.2s cubic-bezier(0.42, 0, 0.2, 1) 0.05s;
+          transition: transform 1s cubic-bezier(0.42, 0, 0.2, 1) 0.05s;
           backface-visibility: hidden;
         }
         .bw-intro-door::before,
@@ -249,8 +371,19 @@ export default function StudioDoorIntro() {
         .bw-intro:not(.entering):hover .bw-intro-lightgap   { width: 4px; filter: brightness(1.2); }
         .bw-intro:not(.entering):hover .bw-intro-floorglow  { opacity: 1; filter: brightness(1.15); }
 
-        .bw-intro.entering .bw-intro-door-left  { transform: rotateY(-85deg); }
-        .bw-intro.entering .bw-intro-door-right { transform: rotateY( 85deg); }
+        .bw-intro.entering:not(.reduced) .bw-intro-door-left {
+          animation:
+            bw-door-left-swing 600ms cubic-bezier(0.6, 0.05, 0.3, 1) 0ms forwards,
+            bw-door-blur 600ms ease-in 400ms forwards;
+        }
+        .bw-intro.entering:not(.reduced) .bw-intro-door-right {
+          animation:
+            bw-door-right-swing 600ms cubic-bezier(0.6, 0.05, 0.3, 1) 0ms forwards,
+            bw-door-blur 600ms ease-in 400ms forwards;
+        }
+        @keyframes bw-door-left-swing  { to { transform: rotateY(-95deg); } }
+        @keyframes bw-door-right-swing { to { transform: rotateY( 95deg); } }
+        @keyframes bw-door-blur        { to { filter: blur(6px); } }
 
         .bw-intro-handle {
           position: absolute;
@@ -269,6 +402,15 @@ export default function StudioDoorIntro() {
         .bw-intro-handle-left  { right: 14px; }
         .bw-intro-handle-right { left: 14px; }
 
+        .bw-intro.entering:not(.reduced) .bw-intro-handle {
+          animation: bw-handle-twitch 220ms cubic-bezier(0.3, 0, 0.5, 1) 30ms;
+        }
+        @keyframes bw-handle-twitch {
+          0%   { transform: translateY(-50%); }
+          35%  { transform: translateY(calc(-50% + 4px)); }
+          100% { transform: translateY(-50%); }
+        }
+
         .bw-intro-lightgap {
           position: absolute;
           top: 0;
@@ -280,7 +422,7 @@ export default function StudioDoorIntro() {
             0 0 50px rgba(255,168,92,0.85),
             0 0 18px rgba(255,210,150,0.7);
           transform: translateX(-50%);
-          transition: opacity 0.7s ease-out, width 0.3s ease, filter 0.3s ease;
+          transition: width 0.3s ease, filter 0.3s ease;
           pointer-events: none;
           animation: bw-intro-flicker 3.6s ease-in-out infinite;
         }
@@ -294,7 +436,10 @@ export default function StudioDoorIntro() {
           85%  { opacity: 0.91; filter: brightness(1.06); }
           100% { opacity: 0.85; filter: brightness(1); }
         }
-        .bw-intro.entering .bw-intro-lightgap { opacity: 0; }
+        .bw-intro.entering:not(.reduced) .bw-intro-lightgap {
+          animation: bw-lightgap-fade 200ms ease-out 0ms forwards;
+        }
+        @keyframes bw-lightgap-fade { to { opacity: 0; } }
 
         .bw-intro-floorglow {
           margin-top: -28px;
@@ -307,7 +452,10 @@ export default function StudioDoorIntro() {
           animation: bw-intro-flicker 3.6s ease-in-out infinite;
           transition: opacity 0.6s ease, filter 0.3s ease;
         }
-        .bw-intro.entering .bw-intro-floorglow { opacity: 0; }
+        .bw-intro.entering:not(.reduced) .bw-intro-floorglow {
+          animation: bw-floorglow-fade 400ms ease-out 100ms forwards;
+        }
+        @keyframes bw-floorglow-fade { to { opacity: 0; } }
 
         .bw-intro-cta {
           position: absolute;
@@ -323,10 +471,8 @@ export default function StudioDoorIntro() {
           text-transform: uppercase;
           color: rgba(245,240,220,0.6);
           animation: bw-intro-cta-pulse 2.4s ease-in-out infinite;
-          transition: opacity 0.3s ease;
           z-index: 5;
         }
-        .bw-intro.entering .bw-intro-cta { opacity: 0; }
         @keyframes bw-intro-cta-pulse {
           0%, 100% { opacity: 0.55; }
           50%      { opacity: 0.95; }
@@ -353,7 +499,7 @@ export default function StudioDoorIntro() {
       `}</style>
 
       <div
-        className={`bw-intro ${phase}`}
+        className={className}
         onClick={enter}
         role="button"
         tabIndex={0}
@@ -363,6 +509,9 @@ export default function StudioDoorIntro() {
         <button className="bw-intro-skip" onClick={skip} aria-label="Intro überspringen">
           Überspringen ×
         </button>
+
+        <div className="bw-intro-bloom" />
+        <div className="bw-intro-whiteflash" />
 
         <div className="bw-intro-scene">
           <div className="bw-intro-stage" ref={stageRef}>
