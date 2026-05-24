@@ -56,6 +56,7 @@ function playEntrySounds() {
 export default function StudioDoorIntro() {
   const [entering, setEntering] = useState(false);
   const [phase2, setPhase2] = useState(false);
+  const [phase3, setPhase3] = useState(false);
   const [mounted, setMounted] = useState(true);
   const [reduced, setReduced] = useState(false);
   const stageRef = useRef(null);
@@ -111,6 +112,7 @@ export default function StudioDoorIntro() {
     setTimeout(() => setPhase2(true), 400);
 
     setTimeout(() => {
+      setPhase3(true);
       const heroRoot = document.querySelector("[data-hero-root]");
       if (heroRoot) heroRoot.classList.add("bw-hero-reveal");
     }, 1000);
@@ -135,6 +137,7 @@ export default function StudioDoorIntro() {
     "bw-intro",
     entering && "entering",
     phase2 && "phase2",
+    phase3 && "phase3",
     reduced && "reduced",
   ].filter(Boolean).join(" ");
 
@@ -153,6 +156,11 @@ export default function StudioDoorIntro() {
           overflow: hidden;
           user-select: none;
           font-family: 'Barlow Condensed', sans-serif;
+          transition: opacity 200ms ease-out;
+        }
+        .bw-intro.phase3 {
+          opacity: 0;
+          pointer-events: none;
         }
         .bw-intro::before {
           content: "";
@@ -191,9 +199,14 @@ export default function StudioDoorIntro() {
           cursor: pointer;
           padding: 0.5rem 0.8rem;
           z-index: 12;
-          transition: color 0.25s ease;
+          opacity: 1;
+          transition: color 0.25s ease, opacity 200ms ease-out;
         }
-        .bw-intro-skip:hover { color: #F5F0DC; }
+        .bw-intro-skip:hover { color: #F5F0DC; opacity: 1; }
+        .bw-intro.entering .bw-intro-skip {
+          opacity: 0;
+          pointer-events: none;
+        }
 
         .bw-intro-bloom {
           position: absolute;
@@ -221,18 +234,15 @@ export default function StudioDoorIntro() {
         .bw-intro-whiteflash {
           position: absolute;
           inset: 0;
-          background: #ffffff;
+          background: #fef6e4;
           opacity: 0;
           pointer-events: none;
           z-index: 8;
         }
         .bw-intro.entering:not(.reduced) .bw-intro-whiteflash {
-          animation:
-            bw-whiteflash-in 220ms ease-in 800ms forwards,
-            bw-whiteflash-out 160ms ease-out 1020ms forwards;
+          animation: bw-whiteflash-in 120ms ease-out 880ms forwards;
         }
-        @keyframes bw-whiteflash-in  { to { opacity: 1; } }
-        @keyframes bw-whiteflash-out { to { opacity: 0; } }
+        @keyframes bw-whiteflash-in { to { opacity: 1; } }
 
         .bw-intro-scene {
           perspective: 1600px;
@@ -327,6 +337,8 @@ export default function StudioDoorIntro() {
           width: min(420px, 70vw);
           height: min(560px, 64vh);
           position: relative;
+          perspective: 1200px;
+          perspective-origin: center center;
           transform-style: preserve-3d;
         }
 
@@ -349,7 +361,9 @@ export default function StudioDoorIntro() {
             inset 0 1px 0 rgba(245,240,220,0.05);
           transition: transform 1s cubic-bezier(0.42, 0, 0.2, 1) 0.05s;
           backface-visibility: hidden;
+          transform-style: preserve-3d;
         }
+        .bw-intro.phase3 .bw-intro-door { display: none; }
         .bw-intro-door::before,
         .bw-intro-door::after {
           content: "";
@@ -373,17 +387,29 @@ export default function StudioDoorIntro() {
 
         .bw-intro.entering:not(.reduced) .bw-intro-door-left {
           animation:
-            bw-door-left-swing 600ms cubic-bezier(0.6, 0.05, 0.3, 1) 0ms forwards,
+            bw-door-left-flyout 1000ms linear 0ms forwards,
             bw-door-blur 600ms ease-in 400ms forwards;
         }
         .bw-intro.entering:not(.reduced) .bw-intro-door-right {
           animation:
-            bw-door-right-swing 600ms cubic-bezier(0.6, 0.05, 0.3, 1) 0ms forwards,
+            bw-door-right-flyout 1000ms linear 0ms forwards,
             bw-door-blur 600ms ease-in 400ms forwards;
         }
-        @keyframes bw-door-left-swing  { to { transform: rotateY(-95deg); } }
-        @keyframes bw-door-right-swing { to { transform: rotateY( 95deg); } }
-        @keyframes bw-door-blur        { to { filter: blur(6px); } }
+        @keyframes bw-door-left-flyout {
+          0%   { transform: translateX(0) rotateY(0deg);
+                 animation-timing-function: cubic-bezier(0.6, 0.05, 0.3, 1); }
+          60%  { transform: translateX(0) rotateY(-95deg);
+                 animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); }
+          100% { transform: translateX(-500px) rotateY(-95deg); }
+        }
+        @keyframes bw-door-right-flyout {
+          0%   { transform: translateX(0) rotateY(0deg);
+                 animation-timing-function: cubic-bezier(0.6, 0.05, 0.3, 1); }
+          60%  { transform: translateX(0) rotateY(95deg);
+                 animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); }
+          100% { transform: translateX(500px) rotateY(95deg); }
+        }
+        @keyframes bw-door-blur { to { filter: blur(6px); } }
 
         .bw-intro-handle {
           position: absolute;
