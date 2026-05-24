@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import imgDamian from "./assets/15.png";
 import imgRendy from "./assets/16.png";
 import imgNiwar from "./assets/17.png";
+import heroStrip from "./assets/hero-strip.jpeg";
 import WerbepartnerSection from "./sections/WerbepartnerSection";
 import StudioDoorIntro from "./components/StudioDoorIntro";
 
@@ -385,7 +386,7 @@ export default function App() {
             Authentische Gespräche mit Schweizer Persönlichkeiten — ohne Drehbuch, auf Mundart, direkt ins Herz.
           </p>
 
-          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", justifyContent: "center", animation: "fadeUp 1s ease 0.6s both" }}>
+          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", justifyContent: "center", animation: "fadeUp 1s ease 0.6s both", position: "relative", zIndex: 1 }}>
             <a href="https://spotify.com" target="_blank" rel="noopener noreferrer" style={{ background: "#1DB954", color: "#fff", padding: "0.85rem 2.2rem", borderRadius: "100px", fontSize: "0.9rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", transition: "transform 0.2s, opacity 0.2s" }}
               onMouseEnter={e => e.currentTarget.style.transform = "translateY(-2px)"}
               onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}>
@@ -397,6 +398,24 @@ export default function App() {
               ▶ &nbsp;Auf YouTube schauen
             </a>
           </div>
+
+          {/* Schweiz silhouette strip — bottom of hero */}
+          <img
+            src={heroStrip}
+            alt=""
+            style={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              width: "100%",
+              height: "auto",
+              mixBlendMode: "multiply",
+              opacity: 0.75,
+              pointerEvents: "none",
+              userSelect: "none",
+              zIndex: 0,
+            }}
+          />
         </section>
 
         {/* ── MANIFESTO ── */}
@@ -512,14 +531,16 @@ export default function App() {
             <p style={{ fontFamily: "'Lora', serif", fontSize: "1rem", color: "rgba(245,240,220,0.6)", lineHeight: 1.8, marginBottom: "3rem" }}>
               Folge uns jetzt und verpasse keine Episode. Die ersten Gespräche kommen bald — und sie werden dich nicht kalt lassen.
             </p>
-            <div style={{ display: "flex", gap: "1.5rem", justifyContent: "center", flexWrap: "wrap" }}>
-              <a href="https://spotify.com" target="_blank" rel="noopener noreferrer" className="platform-btn" style={{ borderColor: "#1DB954" }}>
-                <span style={{ fontSize: "1.8rem" }}>🎵</span>
-                Spotify
+            <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
+              <a href="https://spotify.com" target="_blank" rel="noopener noreferrer" style={{ background: "#1DB954", color: "#fff", padding: "0.85rem 2.2rem", borderRadius: "100px", fontSize: "0.9rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", transition: "transform 0.2s, opacity 0.2s" }}
+                onMouseEnter={e => e.currentTarget.style.transform = "translateY(-2px)"}
+                onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}>
+                ▶ &nbsp;Auf Spotify hören
               </a>
-              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="platform-btn" style={{ borderColor: "#FF0000" }}>
-                <span style={{ fontSize: "1.8rem" }}>▶</span>
-                YouTube
+              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" style={{ border: "2px solid rgba(245,240,220,0.3)", color: "#F5F0DC", padding: "0.85rem 2.2rem", borderRadius: "100px", fontSize: "0.9rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", transition: "border-color 0.2s, transform 0.2s" }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(245,240,220,0.7)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(245,240,220,0.3)"; e.currentTarget.style.transform = "translateY(0)"; }}>
+                ▶ &nbsp;Auf YouTube schauen
               </a>
             </div>
           </div>
