@@ -3,6 +3,7 @@ import imgDamian from "./assets/15.png";
 import imgRendy from "./assets/16.png";
 import imgNiwar from "./assets/17.png";
 import WerbepartnerSection from "./sections/WerbepartnerSection";
+import StudioDoorIntro from "./components/StudioDoorIntro";
 
 // ── Typewriter Hook ──────────────────────────────────────────────
 function useTypewriter(words, speed = 80, pause = 2000) {
@@ -318,6 +319,8 @@ export default function App() {
           .section-pad { padding: 4rem 1.5rem !important; }
         }
       `}</style>
+
+      <StudioDoorIntro />
 
       <div style={{ background: "#3D5F5F", color: "#F5F0DC", fontFamily: "'Barlow Condensed', sans-serif", minHeight: "100vh", width: "100%" }}>
 
