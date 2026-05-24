@@ -1,9 +1,9 @@
 import { colors, fonts } from "../lib/tokens";
 
 const formats = [
-  { numero: "01", label: "PRE-ROLL", text: "Vorgelagerte Erwähnung, klar gekennzeichnet." },
-  { numero: "02", label: "HOST-READ", text: "Mitten in der Episode, in der Stimme des Hosts." },
-  { numero: "03", label: "INTEGRATION", text: "Die Marke wird Teil des Gesprächs." },
+  { numero: "01", label: "VOR DER TÜR", text: "Vorgelagerte Erwähnung, klar als Werbung markiert." },
+  { numero: "02", label: "IN DER STIMME", text: "Mitten in der Episode, vom Host gelesen." },
+  { numero: "03", label: "IM GESPRÄCH", text: "Die Marke wird Teil des Themas, nicht der Pause." },
 ];
 
 export default function WerbepartnerSection() {
@@ -39,7 +39,7 @@ export default function WerbepartnerSection() {
               color: "rgba(255,255,255,0.65)",
             }}
           >
-            Für Marken &amp; Partner
+            Damit es weitergeht
           </span>
         </div>
 
@@ -55,7 +55,7 @@ export default function WerbepartnerSection() {
             textShadow: "0 0 60px rgba(250,245,205,0.08)",
           }}
         >
-          Zielgruppenpassung{" "}
+          Lieber wenige, die wirklich{" "}
           <em
             style={{
               fontFamily: fonts.body,
@@ -65,9 +65,9 @@ export default function WerbepartnerSection() {
               textShadow: "0 0 24px rgba(250,245,205,0.35)",
             }}
           >
-            schlägt
-          </em>{" "}
-          Reichweite.
+            zuhören
+          </em>
+          .
         </h2>
 
         <p
@@ -80,7 +80,7 @@ export default function WerbepartnerSection() {
             margin: 0,
           }}
         >
-          Klassische Werbung funktioniert im Langformat nicht. Wir integrieren Marken so, dass sie zur Geschichte gehören — auf Mundart, mit echtem Bezug zur Zielgruppe Schweiz.
+          Ein Podcast lebt nicht vom Quoten-Druck. Er lebt von Menschen, die zuhören wollen. Wer mit uns sendet, gehört in die Geschichte — nicht zwischen sie.
         </p>
 
         <div
@@ -197,11 +197,11 @@ export default function WerbepartnerSection() {
                 fontSize: "1rem",
                 lineHeight: 1.65,
                 color: "rgba(255,255,255,0.78)",
-                maxWidth: "44ch",
+                maxWidth: "48ch",
                 margin: "1.2rem auto 0",
               }}
             >
-              monatliche Hörer:innen reichen für den Break-even von Werbepartnern.
+              monatliche Hörer:innen reichen — für Partner, die zuhören wollen, statt zu rufen.
             </p>
           </div>
         </div>

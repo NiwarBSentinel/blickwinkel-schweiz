@@ -519,9 +519,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* ── WERBEPARTNER ── */}
-        <WerbepartnerSection />
-
         {/* ── CTA ── */}
         <section style={{ background: "rgba(0,0,0,0.3)", padding: "7rem 5vw", textAlign: "center" }}>
           <div className="reveal" style={{ maxWidth: "700px", margin: "0 auto" }}>
@@ -545,6 +542,9 @@ export default function App() {
             </div>
           </div>
         </section>
+
+        {/* ── WERBEPARTNER ── */}
+        <WerbepartnerSection />
 
         {/* ── NEWSLETTER ── */}
         <Newsletter />
